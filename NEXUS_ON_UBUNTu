@@ -1,0 +1,64 @@
+Type the following commands into the terminal.  Everything after the # is a comment for your better understanding, and does not need to be entered with the command, I have colored the comments green for clarity.
+
+wget http://download.sonatype.com/nexus/oss/nexus-2.11.2-06-bundle.tar.gz # download the nexus tarball.
+
+sudo cp nexus-2.11.2.-06-bundle.tar.gz /usr/local # copy the tarball to the /usr/local directory
+
+cd /usr/local # change directory to the location of the tarball
+
+sudo tar xvzf nexus-2.11.2.-06-bundle.tar.gz # extract the tarball
+
+sudo ln -s nexus-2.11.2.-06 nexus # create a symbolic link “nexus” to the versioned directory
+
+sudo adduser nexus # Create a user that will be used to run Nexus
+
+sudo sh –c ‘echo “export NEXUS_HOME=/usr/local/nexus” >> /etc/profile.d/nexus.sh’
+
+sudo cp NEXUS_HOME/bin/nexus  /etc/init.d/nexus
+
+sudo chmod 755 /etc/init.d/nexus # allow everyone to read and execute this file but only the owner can write to the file.
+
+sudo chown root /etc/init.d/nexus # change the owner of startup script to be root
+
+sudo chown –h nexus:nexus NEXUS_HOME # change the owner of the nexus home directory including symbolic links to be the nexus user we created above
+
+sudo chown -RH nexus:nexus NEXUS_HOME # recursively change the owner of the nexus home directory to be the nexus user we created above
+
+sudo mkdir /etc/local/sonatype-work # create a directory for Sonatype products to use for working files
+
+sudo mkdir /etc/local/sonatype-work/nexus # create a directory for Nexus to use for working files
+
+sudo chown –R nexus:nexus /etc/local/sonatype-work # make the nexus user created above the owner of this directory
+
+sudo nano /etc/init.d/nexus # edit this file to point to the directory and user created above.
+
+NEXUS_HOME=”/usr/local/nexus”
+
+RUN_AS_USER=”nexus”
+
+cd /etc/init.d # change to the directory which controls starting Linux subsystems on boot
+
+sudo chkconfig –add nexus # add nexus as a system service
+
+sudo chkconfig –levels 345 nexus on # start the nexus service on boot for run levels 3-5 (Multi-User Mode with Networking up to X11)
+
+sudo service nexus start # start the Nexus service
+
+sudo firewall-cmd –permanent –zone=public –add-port=8081/tcp # permanently open the port 8081 in the CentOS firewall
+
+sudo firewall-cmd –reload # reload the firewall settings to make them active
+
+You can now open a browser and go to http://quartz:8081/nexus to explore Nexus.  The default username is deployment and default password is deployment123. Hopefully this tutorial made it simple and easy to install Nexus. Stay tuned for more installation tutorials.
+
+ 
+
+Get Our Secret to Good Code Documentation Guide
+Subscribe to our blog and gain access to our guide developed by our consulting teams.
+
+Some ad blockers can block the form below.
+
+Email
+ 
+
+ 
+ 
